@@ -1,12 +1,11 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/db.js');
 
-// Define the User model
 const Product = sequelize.define('Product', {
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
-        primaryKey: true
+        primaryKey: true,
     },
     libelle: {
         type: DataTypes.STRING,
