@@ -21,5 +21,6 @@ app.use(morgan('combined', { stream: accessLogStream }));
 
 // Routes
 app.use('/users', userRoutes);
+app.use('/products', productRoutes);
 
 module.exports = app;
