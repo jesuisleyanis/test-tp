@@ -51,4 +51,19 @@ describe('Invoice Routes', () => {
         expect(res.body.items).to.be.an('array');
         expect(res.body.items.length).to.be.greaterThan(0);
     });
+
+    it('should update an invoice', async () => {
+        const invoice = await Invoice.findOne();
+
+        const res = await request.put(`/invoices/${invoice.id}`).send({
+            products: [
+                { productId: 1, quantity: 1 },
+                { productId: 2, quantity: 2 },
+            ],
+        });
+
+        expect(res.status).to.equal(200);
+        expect(res.body).to.have.property('invoice');
+        expect(res.body.invoice.total).to.equal(50); // 1*10 + 2*20
+    });
 })
