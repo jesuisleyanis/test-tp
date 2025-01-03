@@ -4,6 +4,7 @@ const supertest = require('supertest');
 const app = require('../app');
 const sequelize = require('../config/db');
 const Product = require('../models/productModel');
+const { Invoice } = require('../models/invoiceModel');
 
 
 const { expect } = chai;
