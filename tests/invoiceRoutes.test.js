@@ -66,4 +66,13 @@ describe('Invoice Routes', () => {
         expect(res.body).to.have.property('invoice');
         expect(res.body.invoice.total).to.equal(50); // 1*10 + 2*20
     });
+
+    it('should delete an invoice', async () => {
+        const invoice = await Invoice.findOne();
+        const res = await request.delete(`/invoices/${invoice.id}`);
+        expect(res.status).to.equal(204);
+
+        const findRes = await request.get(`/invoices/${invoice.id}`);
+        expect(findRes.status).to.equal(404); // Facture supprimée
+    });
 })
