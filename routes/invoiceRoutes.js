@@ -6,5 +6,6 @@ router.post('/', invoiceController.createInvoice);
 router.get('/', invoiceController.getAllInvoices);
 router.get('/:id', invoiceController.getInvoiceById);
 router.delete('/:id', invoiceController.deleteInvoice);
+router.put('/:id', invoiceController.updateInvoice);
 
 module.exports = router;
