@@ -40,4 +40,14 @@ describe('Invoice Routes', () => {
         expect(res.body).to.be.an('array');
         expect(res.body.length).to.equal(1);
     });
+
+    it('should retrieve an invoice by ID', async () => {
+        const invoice = await Invoice.findOne(); // Récupérer une facture existante
+        const res = await request.get(`/invoices/${invoice.id}`);
+
+        expect(res.status).to.equal(200);
+        expect(res.body).to.have.property('id', invoice.id);
+        expect(res.body.items).to.be.an('array');
+        expect(res.body.items.length).to.be.greaterThan(0);
+    });
 })
