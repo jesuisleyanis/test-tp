@@ -46,3 +46,15 @@ exports.getAllInvoices = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+
+exports.getInvoiceById = async (req, res) => {
+    try {
+        const invoice = await Invoice.findByPk(req.params.id, { include: { model: InvoiceItem, as: 'items' } });
+        if (!invoice) {
+            return res.status(404).json({ error: 'Invoice not found' });
+        }
+        res.json(invoice);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
