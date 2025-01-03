@@ -33,4 +33,11 @@ describe('Invoice Routes', () => {
         expect(res.body).to.have.property('items');
         expect(res.body.invoice.total).to.equal(40); // 2*10 + 1*20
     });
+
+    it('should retrieve all invoices', async () => {
+        const res = await request.get('/invoices');
+        expect(res.status).to.equal(200);
+        expect(res.body).to.be.an('array');
+        expect(res.body.length).to.equal(1);
+    });
 })
