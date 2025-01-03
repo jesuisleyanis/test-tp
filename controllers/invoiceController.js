@@ -37,3 +37,12 @@ exports.createInvoice = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+
+exports.getAllInvoices = async (req, res) => {
+    try {
+        const invoices = await Invoice.findAll({ include: { model: InvoiceItem, as: 'items' } });
+        res.json(invoices);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
