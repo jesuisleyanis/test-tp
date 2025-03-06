@@ -77,3 +77,17 @@ describe('Review Routes', () => {
         expect(res.body.message).to.equal('Review introuvable.');
     });
 
+    it('should retrieve a specific review by ID', async () => {
+        const res = await request.get(`/reviews/${review.id}`);
+        
+        expect(res.status).to.equal(200);
+        expect(res.body).to.have.property('id', review.id);
+    });
+
+    it('should failed to retrieve a specific review by ID with 404', async () => {
+        const res = await request.get(`/reviews/121212`);
+        
+        expect(res.status).to.equal(404);
+        expect(res.body).to.have.property('id', review.id);
+    });
+
