@@ -61,3 +61,19 @@ describe('Review Routes', () => {
         expect(res.status).to.equal(404);
         expect(res.body.message).to.equal('Utilisateur introuvable.');
     });
+
+    it('should retrieve all reviews for a product', async () => {
+        const res = await request.get(`/products/${product.body.id}/reviews`);
+        
+        expect(res.status).to.equal(200);
+        expect(res.body).to.be.an('array');
+        expect(res.body.length).to.be.greaterThan(0);
+    });
+
+    it('should failed to retrieve all reviews for a product with 404', async () => {
+        const res = await request.get(`/products/20000/reviews`);
+        
+        expect(res.status).to.equal(404);
+        expect(res.body.message).to.equal('Review introuvable.');
+    });
+
