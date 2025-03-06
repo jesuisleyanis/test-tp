@@ -18,6 +18,15 @@ class ReviewService {
 
         return review;
     }
+
+    static async getReviewsByProduct (productId) {
+        const product = await Product.findByPk(productId);
+        if (!product) {
+            throw new Error('Produit introuvable.');
+        }
+    
+        return await Review.findAll({ where: { productId } });
+    };
 }
 
 module.exports = ReviewService;
