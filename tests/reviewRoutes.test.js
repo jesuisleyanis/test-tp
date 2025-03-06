@@ -91,3 +91,39 @@ describe('Review Routes', () => {
         expect(res.body).to.have.property('id', review.id);
     });
 
+    it('should update a review', async () => {
+        const res = await request.put(`/reviews/${review.id}`).send({
+            rating: 4,
+            comment: 'Updated review'
+        });
+        
+        expect(res.status).to.equal(200);
+        expect(res.body.rating).to.equal(4);
+        expect(res.body.comment).to.equal('Updated review');
+    });
+
+    it('should failed to update a review with 404', async () => {
+        
+        const res = await request.put(`/reviews/4343`).send({
+            userId: user.body.id,
+            rating: 2
+        });
+        
+        expect(res.status).to.equal(404);
+        expect(res.body.message).to.equal('Utilisateur introuvable');
+    });
+
+    it('should not update a review of another user', async () => {
+        const anotherUser = await request.post('/users').send({
+            name: 'Another User',
+            email: 'another.user@example.com'
+        });
+        
+        const res = await request.put(`/reviews/${review.id}`).send({
+            userId: anotherUser.body.id,
+            rating: 2
+        });
+        
+        expect(res.status).to.equal(403);
+        expect(res.body.message).to.equal('Vous ne pouvez pas modifier cette review.');
+    });
