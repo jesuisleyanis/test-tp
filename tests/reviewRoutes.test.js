@@ -24,6 +24,13 @@ describe('Review Routes', () => {
             libelle: 'Test Product',
             price: 10.99
         });
+
+        review = await request.post('/reviews').send({
+            userId: user.body.id,
+            productId: product.body.id,
+            rating: 5,
+            comment: 'Excellent product!'
+        });
     });
 
     it('should create a new review', async () => {
@@ -63,7 +70,7 @@ describe('Review Routes', () => {
     });
 
     it('should retrieve all reviews for a product', async () => {
-        const res = await request.get(`/products/${product.body.id}/reviews`);
+        const res = await request.get(`/reviews/products/${product.body.id}`);
         
         expect(res.status).to.equal(200);
         expect(res.body).to.be.an('array');
@@ -71,10 +78,10 @@ describe('Review Routes', () => {
     });
 
     it('should failed to retrieve all reviews for a product with 404', async () => {
-        const res = await request.get(`/products/20000/reviews`);
+        const res = await request.get(`/reviews/products/20000`);
         
         expect(res.status).to.equal(404);
-        expect(res.body.message).to.equal('Review introuvable.');
+        expect(res.body.message).to.equal('Produit introuvable.');
     });
 
     it('should retrieve a specific review by ID', async () => {
