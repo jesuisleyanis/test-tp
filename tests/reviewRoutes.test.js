@@ -21,7 +21,7 @@ describe('Review Routes', () => {
         });
 
         product = await request.post('/products').send({
-            name: 'Test Product',
+            libelle: 'Test Product',
             price: 10.99
         });
     });
