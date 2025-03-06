@@ -127,3 +127,17 @@ describe('Review Routes', () => {
         expect(res.status).to.equal(403);
         expect(res.body.message).to.equal('Vous ne pouvez pas modifier cette review.');
     });
+
+    it('should delete a review', async () => {
+        const res = await request.delete(`/reviews/${review.id}`);
+        
+        expect(res.status).to.equal(200);
+    });
+
+    it('should failed to delete a review with 404', async () => {
+        const res = await request.delete(`/reviews/42423`);
+        
+        expect(res.status).to.equal(404);
+        expect(res.body.message).to.equal('Review introuvable.');
+    });
+});
