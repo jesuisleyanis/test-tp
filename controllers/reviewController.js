@@ -75,3 +75,18 @@ exports.updateReview = async (req, res) => {
     }
 };
 
+exports.deleteReview = async (req, res) => {
+    try {
+        const reviewId = req.params.reviewId;
+        
+        await ReviewService.deleteReview(reviewId);
+        
+        res.status(200).json({ message: 'Avis supprimé avec succès.' });
+    } catch (error) {
+        if (error.message === 'Review introuvable.') {
+            return res.status(404).json({ message: error.message });
+        }
+        res.status(500).json({ message: 'Erreur serveur.', error: error.message });
+    }
+};
+

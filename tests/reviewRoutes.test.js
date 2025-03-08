@@ -103,7 +103,7 @@ describe('Review Routes', () => {
             rating: 4,
             comment: 'Updated review'
         });
-        
+
         expect(res.status).to.equal(200);
         expect(res.body.rating).to.equal(4);
         expect(res.body.comment).to.equal('Updated review');
@@ -117,7 +117,7 @@ describe('Review Routes', () => {
         });
         
         expect(res.status).to.equal(404);
-        expect(res.body.message).to.equal('Utilisateur introuvable');
+        expect(res.body.message).to.equal('Avis introuvable');
     });
 
     it('should not update a review of another user', async () => {

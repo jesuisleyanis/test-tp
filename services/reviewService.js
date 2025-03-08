@@ -66,6 +66,18 @@ class ReviewService {
         
         return review;
     };
+
+    static async deleteReview (reviewId) {
+
+        const review = await Review.findByPk(reviewId);
+        if (!review) {
+            throw new Error('Review introuvable.');
+        }
+        
+        await review.destroy();
+        
+        return true;
+    };
 }
 
 module.exports = ReviewService;
