@@ -27,6 +27,15 @@ class ReviewService {
     
         return await Review.findAll({ where: { productId } });
     };
+
+    static async getReviewsById (reviewId) {
+        try {
+            const review = await Review.findByPk(reviewId);
+            return review;
+        } catch (error) {
+            throw new Error('Avis introuvable.');
+        }
+    };
 }
 
 module.exports = ReviewService;

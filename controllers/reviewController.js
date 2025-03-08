@@ -33,3 +33,22 @@ exports.getReviewsByProduct = async (req, res) => {
         res.status(500).json({ message: 'Erreur serveur.', error: error.message });
     }
 };
+
+exports.getReviewsById = async (req, res) => {
+    try {
+        const { reviewId } = req.params;
+        const review = await ReviewService.getReviewsById(reviewId);
+        
+        if (!review) {
+            return res.status(404).json({ message: 'Avis introuvable.' });
+        }
+
+        res.status(200).json(review);
+    } catch (error) {
+        if (error.message === 'Avis introuvable.') {
+            return res.status(404).json({ message: error.message });
+        }
+        res.status(500).json({ message: 'Erreur serveur.', error: error.message });
+    }
+};
+
