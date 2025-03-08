@@ -44,7 +44,7 @@ describe('Review Routes', () => {
         expect(res.status).to.equal(201);
         expect(res.body).to.have.property('message');
         
-        review = res.body;
+        review = res.body.review;
     });
 
     it('should not create a review with an invalid product', async () => {
@@ -86,7 +86,7 @@ describe('Review Routes', () => {
 
     it('should retrieve a specific review by ID', async () => {
         const res = await request.get(`/reviews/${review.id}`);
-        
+
         expect(res.status).to.equal(200);
         expect(res.body).to.have.property('id', review.id);
     });
@@ -95,7 +95,7 @@ describe('Review Routes', () => {
         const res = await request.get(`/reviews/121212`);
         
         expect(res.status).to.equal(404);
-        expect(res.body).to.have.property('id', review.id);
+        expect(res.body.message).to.equal('Avis introuvable.');
     });
 
     it('should update a review', async () => {
