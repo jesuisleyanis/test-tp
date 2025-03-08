@@ -36,6 +36,36 @@ class ReviewService {
             throw new Error('Avis introuvable.');
         }
     };
+
+    static async updateReview (reviewId, { userId, rating, comment }) {
+        const review = await Review.findByPk(reviewId);
+        if (!review) {
+            throw new Error('Avis introuvable');
+        }
+                
+        if (userId) {            
+            const user = await User.findByPk(userId);
+            if (!user) {
+                throw new Error('Utilisateur introuvable');
+            }
+                        
+            if (review.userId !== userId) {
+                throw new Error('Vous ne pouvez pas modifier cette review.');
+            }
+        }
+                
+        if (rating !== undefined) {
+            review.rating = rating;
+        }
+        
+        if (comment !== undefined) {
+            review.comment = comment;
+        }
+                
+        await review.save();
+        
+        return review;
+    };
 }
 
 module.exports = ReviewService;

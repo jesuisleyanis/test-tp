@@ -52,3 +52,26 @@ exports.getReviewsById = async (req, res) => {
     }
 };
 
+exports.updateReview = async (req, res) => {
+    try {
+        const reviewId = req.params.reviewId;
+
+        const { userId, rating, comment } = req.body;
+        
+        const updatedReview = await ReviewService.updateReview(reviewId, { userId, rating, comment });
+        
+        res.status(200).json(updatedReview);
+    } catch (error) {
+        if (error.message === 'Avis introuvable') {
+            return res.status(404).json({ message: error.message });
+        }
+        if (error.message === 'Utilisateur introuvable') {
+            return res.status(404).json({ message: error.message });
+        }
+        if (error.message === 'Vous ne pouvez pas modifier cette review.') {
+            return res.status(403).json({ message: error.message });
+        }
+        res.status(500).json({ message: 'Erreur serveur.', error: error.message });
+    }
+};
+
