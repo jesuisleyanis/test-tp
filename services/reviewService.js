@@ -4,80 +4,78 @@ const User = require('../models/userModel');
 
 class ReviewService {
     static async createReview({ userId, productId, rating, comment }) {
-        const product = await Product.findByPk(productId);
-        if (!product) {
-            throw new Error('Produit introuvable.');
-        }
-
-        const user = await User.findByPk(userId);
-        if (!user) {
-            throw new Error('Utilisateur introuvable.');
-        }
-
-        const review = await Review.create({ userId, productId, rating, comment });
-
-        return review;
-    }
-
-    static async getReviewsByProduct (productId) {
-        const product = await Product.findByPk(productId);
-        if (!product) {
-            throw new Error('Produit introuvable.');
-        }
-    
-        return await Review.findAll({ where: { productId } });
-    };
-
-    static async getReviewsById (reviewId) {
         try {
-            const review = await Review.findByPk(reviewId);
-            return review;
-        } catch (error) {
-            throw new Error('Avis introuvable.');
-        }
-    };
+            const product = await Product.findByPk(productId);
+            if (!product) {
+                throw new Error('Produit introuvable.');
+            }
 
-    static async updateReview (reviewId, { userId, rating, comment }) {
-        const review = await Review.findByPk(reviewId);
-        if (!review) {
-            throw new Error('Avis introuvable');
-        }
-                
-        if (userId) {            
             const user = await User.findByPk(userId);
             if (!user) {
-                throw new Error('Utilisateur introuvable');
+                throw new Error('Utilisateur introuvable.');
             }
-                        
-            if (review.userId !== userId) {
+
+            return await Review.create({ userId, productId, rating, comment });
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    static async getReviewsByProduct(productId) {
+        try {
+            const product = await Product.findByPk(productId);
+            if (!product) {
+                return null; // Évite un blocage si le produit n'existe pas
+            }
+            return await Review.findAll({ where: { productId } });
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    static async getReviewsById(reviewId) {
+        try {
+            return await Review.findByPk(reviewId) || null;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    static async updateReview(reviewId, { userId, rating, comment }) {
+        try {
+            const review = await Review.findByPk(reviewId);
+            if (!review) {
+                throw new Error('Avis introuvable');
+            }
+
+            if (userId && review.userId !== userId) {
                 throw new Error('Vous ne pouvez pas modifier cette review.');
             }
-        }
-                
-        if (rating !== undefined) {
-            review.rating = rating;
-        }
-        
-        if (comment !== undefined) {
-            review.comment = comment;
-        }
-                
-        await review.save();
-        
-        return review;
-    };
 
-    static async deleteReview (reviewId) {
+            // Mise à jour uniquement des champs fournis
+            const updatedFields = {};
+            if (rating !== undefined) updatedFields.rating = rating;
+            if (comment !== undefined) updatedFields.comment = comment;
 
-        const review = await Review.findByPk(reviewId);
-        if (!review) {
-            throw new Error('Review introuvable.');
+            await review.update(updatedFields);
+            return review;
+        } catch (error) {
+            throw error;
         }
-        
-        await review.destroy();
-        
-        return true;
-    };
+    }
+
+    static async deleteReview(reviewId) {
+        try {
+            const review = await Review.findByPk(reviewId);
+            if (!review) {
+                return false; // Retourne `false` au lieu de lever une erreur
+            }
+            await review.destroy();
+            return true;
+        } catch (error) {
+            throw error;
+        }
+    }
 }
 
 module.exports = ReviewService;
