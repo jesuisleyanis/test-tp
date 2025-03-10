@@ -1,70 +1,48 @@
-const Product = require('../models/productModel');
+const productService = require('../services/productService');
 
-// Get all products
 exports.getAllProducts = async (req, res) => {
     try {
-        const products = await Product.findAll();
+        const products = await productService.getAllProducts();
         res.json(products);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 };
 
-// Get product by ID
 exports.getProductById = async (req, res) => {
     try {
-        const product = await Product.findByPk(req.params.id);
-        if (!product) {
-            return res.status(404).json({ error: 'Product not found' });
-        }
+        const product = await productService.getProductById(req.params.id);
         res.json(product);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(error.message === 'Product not found' ? 404 : 500).json({ error: error.message });
     }
 };
 
-// Create new product
 exports.createProduct = async (req, res) => {
     try {
         const { libelle, price } = req.body;
-        if (!libelle || !price) {
-            return res.status(400).json({ error: 'Libelle and price are required' });
-        }
-        const newProduct = await Product.create({ libelle, price });
+        const newProduct = await productService.createProduct(libelle, price);
         res.status(201).json(newProduct);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 };
 
-// Update product by ID
 exports.updateProduct = async (req, res) => {
     try {
         const { libelle, price } = req.body;
-        const product = await Product.findByPk(req.params.id);
-
-        if (!product) {
-            return res.status(404).json({ error: 'Product not found' });
-        }
-
-        await product.update({ libelle, price });
-        res.json(product);
+        const updatedProduct = await productService.updateProduct(req.params.id, libelle, price);
+        res.json(updatedProduct);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(error.message === 'Product not found' ? 404 : 500).json({ error: error.message });
     }
 };
 
-// Delete product by ID
 exports.deleteProduct = async (req, res) => {
     try {
-        const product = await Product.findByPk(req.params.id);
-        if (!product) {
-            return res.status(404).json({ error: 'Product not found' });
-        }
-
-        await product.destroy();
+        await productService.deleteProduct(req.params.id);
         res.status(204).send();
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(error.message === 'Product not found' ? 404 : 500).json({ error: error.message });
     }
 };
