@@ -1,19 +1,17 @@
-const User = require('../models/userModel');
+const UserService = require('../services/userService');
 
-// Get all users
 exports.getAllUsers = async (req, res) => {
     try {
-        const users = await User.findAll();
+        const users = await UserService.getAllUsers();
         res.json(users);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 };
 
-// Get user by ID
 exports.getUserById = async (req, res) => {
     try {
-        const user = await User.findByPk(req.params.id);
+        const user = await UserService.getUserById(req.params.id);
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }
@@ -23,46 +21,32 @@ exports.getUserById = async (req, res) => {
     }
 };
 
-// Create new user
 exports.createUser = async (req, res) => {
     try {
         const { name, email } = req.body;
-        if (!name || !email) {
-            return res.status(400).json({ error: 'Name and email are required' });
-        }
-        const newUser = await User.create({ name, email });
+        const newUser = await UserService.createUser({ name, email });
         res.status(201).json(newUser);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(400).json({ error: error.message });
     }
 };
 
-// Update user by ID
 exports.updateUser = async (req, res) => {
     try {
         const { name, email } = req.body;
-        const user = await User.findByPk(req.params.id);
-
-        if (!user) {
-            return res.status(404).json({ error: 'User not found' });
-        }
-
-        await user.update({ name, email });
-        res.json(user);
+        const updatedUser = await UserService.updateUser(req.params.id, { name, email });
+        res.json(updatedUser);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(error.message === 'User not found' ? 404 : 500).json({ error: error.message });
     }
 };
 
-// Delete user by ID
 exports.deleteUser = async (req, res) => {
     try {
-        const user = await User.findByPk(req.params.id);
-        if (!user) {
+        const deleted = await UserService.deleteUser(req.params.id);
+        if (!deleted) {
             return res.status(404).json({ error: 'User not found' });
         }
-
-        await user.destroy();
         res.status(204).send();
     } catch (error) {
         res.status(500).json({ error: error.message });
